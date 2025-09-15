@@ -39,8 +39,8 @@ import pyhfm
 # Read HFM file and get PyArrow table
 table = pyhfm.read_hfm("sample.tst")
 
-# Convert to pandas DataFrame for analysis
-df = table.to_pandas()
+# Convert to polars DataFrame for analysis
+df = table.to_polars()
 print(df.head())
 ```
 

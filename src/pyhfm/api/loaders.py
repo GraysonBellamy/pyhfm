@@ -66,7 +66,7 @@ def read_hfm(
         Basic usage:
         >>> table = read_hfm("sample.tst")
         >>> print(table.schema)
-        >>> print(table.to_pandas())
+        >>> print(table.to_polars()())
 
         Access metadata separately:
         >>> metadata, table = read_hfm("sample.tst", return_metadata=True)
@@ -138,9 +138,9 @@ def main() -> None:
         "--encoding", help="File encoding override (default: auto-detect)"
     )
 
-    args = parser.parse_args()
-
     try:
+        args = parser.parse_args()
+
         # Prepare config
         config = {}
         if args.encoding:
@@ -190,9 +190,17 @@ def _write_output_file(
 
         pq.write_table(table, output_path)
     elif args.format == "csv":
-        table.to_pandas().to_csv(output_path, index=False)
+        import polars as pl  # noqa: PLC0415
+
+        # Convert PyArrow table to Polars DataFrame and write CSV
+        pl_df = pl.from_arrow(table)
+        pl_df.write_csv(output_path)
     elif args.format == "json":
-        table.to_pandas().to_json(output_path, orient="records", indent=2)
+        import polars as pl  # noqa: PLC0415
+
+        # Convert PyArrow table to Polars DataFrame and write JSON
+        pl_df = pl.from_arrow(table)
+        pl_df.write_json(output_path)
 
     print(f"Data written to {output_path}")
 
@@ -207,12 +215,20 @@ def _print_to_stdout(
     args: argparse.Namespace, table: Any, metadata: dict[str, Any] | None
 ) -> None:
     """Print output to stdout."""
+    import polars as pl  # noqa: PLC0415
+
+    # Convert PyArrow table to Polars DataFrame for output
+    pl_df = pl.from_arrow(table)
+
     if args.format == "csv":
-        print(table.to_pandas().to_csv(index=False))
+        print(pl_df.write_csv())
     elif args.format == "json":
-        print(table.to_pandas().to_json(orient="records", indent=2))
+        # Polars write_json() outputs compact JSON, so we'll format it for readability
+        json_str = pl_df.write_json()
+        parsed = json.loads(json_str)
+        print(json.dumps(parsed, indent=2))
     else:
-        print(table.to_pandas())
+        print(pl_df)
 
     if metadata is not None:
         print("\n--- METADATA ---")

@@ -24,8 +24,8 @@ def basic_reading_example() -> None:
         print(f"Columns: {table.column_names}")
         print()
 
-        # Convert to pandas for easier viewing
-        df = table.to_pandas()
+        # Convert to polars for easier viewing
+        df = table.to_polars()
         print("Data preview:")
         print(df.head())
         print()
@@ -125,12 +125,12 @@ def data_export_example() -> None:
         table = pyhfm.read_hfm(file_path)
 
         # Export to CSV
-        df = table.to_pandas()
+        df = table.to_polars()
         output_dir = Path("output")
         output_dir.mkdir(exist_ok=True)
 
         csv_path = output_dir / "hfm_data.csv"
-        df.to_csv(csv_path, index=False)
+        df.write_csv(csv_path)
         print(f"Exported to CSV: {csv_path}")
 
         # Export to Parquet (preserves metadata)

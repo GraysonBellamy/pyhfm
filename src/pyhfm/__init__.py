@@ -12,7 +12,7 @@ Main functionality:
 Example:
     >>> import pyhfm
     >>> table = pyhfm.read_hfm("sample.tst")
-    >>> print(table.to_pandas())
+    >>> print(table.to_polars())
 
     >>> # Access metadata
     >>> metadata, table = pyhfm.read_hfm("sample.tst", return_metadata=True)

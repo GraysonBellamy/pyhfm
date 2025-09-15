@@ -28,6 +28,7 @@ dependencies = [
     "pyarrow>=10.0.0",
     "numpy>=1.20.0",
     "chardet>=5.0.0",
+    "polars>=0.20.0",
 ]
 
 [project.optional-dependencies]
@@ -122,4 +123,10 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
 ]
