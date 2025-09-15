@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pyhfm
 import pyarrow.parquet as pq
+
+import pyhfm
 
 
 def basic_reading_example() -> None:

@@ -252,9 +252,10 @@ class HFMParser:
     def _parse_date(self, line: str) -> str | None:
         """Parse date from a line."""
         try:
-            datetime = dt.strptime(line.strip(), self.config.date_format)
-            # Convert to UTC timezone aware datetime for consistency
-            datetime = datetime.replace(tzinfo=timezone.utc)
+            # Parse datetime and immediately make it timezone-aware
+            datetime = dt.strptime(line.strip(), self.config.date_format).replace(
+                tzinfo=timezone.utc
+            )
             return datetime.isoformat()
         except ValueError:
             return None

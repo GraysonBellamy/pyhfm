@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast, overload
 
-import pyarrow as pa
-
 if TYPE_CHECKING:
+    import pyarrow as pa
+
     from pyhfm.constants import FileMetadata
 
 from pyhfm.core.parser import HFMParser
@@ -102,8 +102,6 @@ def read_hfm(
                 return file_metadata, table
             return {}, table
 
-        return table
-
     except HFMError:
         # Re-raise HFM-specific errors as-is
         raise
@@ -111,6 +109,8 @@ def read_hfm(
         # Wrap unexpected errors
         error_msg = f"Unexpected error reading HFM file: {e}"
         raise HFMError(error_msg, str(file_path)) from e
+    else:
+        return table
 
 
 def main() -> None:

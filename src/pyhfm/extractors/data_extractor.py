@@ -254,44 +254,43 @@ class DataExtractor:
             for key, value in metadata["setpoints"].items():
                 try:
                     setpoint = int(key.split("_")[1])
-
-                    # Extract average temperature - validate dict and required keys
-                    if not isinstance(value, dict):
-                        continue
-                    if (
-                        "temperature_average" not in value
-                        or "volumetric_heat_capacity" not in value
-                    ):
-                        continue
-                    temp_avg_data = value.get("temperature_average", {})
-                    heat_cap_data = value.get("volumetric_heat_capacity", {})
-
-                    if not isinstance(temp_avg_data, dict) or not isinstance(
-                        heat_cap_data, dict
-                    ):
-                        continue
-
-                    average_temp = temp_avg_data.get("value")
-                    average_temp_unit = temp_avg_data.get("unit")
-
-                    # Extract heat capacity
-                    specific_heat = heat_cap_data.get("value")
-                    specific_heat_unit = heat_cap_data.get("unit")
-
-                    # Validate values are present and numeric
-                    if average_temp is None or specific_heat is None:
-                        continue
-                    if not isinstance(average_temp, (int, float)) or not isinstance(
-                        specific_heat, (int, float)
-                    ):
-                        continue
-
-                    data.append([setpoint, average_temp, specific_heat])
-                    units = [average_temp_unit, specific_heat_unit]
-
-                except (KeyError, ValueError, TypeError):
-                    # Skip setpoints with missing/invalid data instead of failing
+                except (ValueError, IndexError):
                     continue
+
+                # Extract average temperature - validate dict and required keys
+                if not isinstance(value, dict):
+                    continue
+
+                # Check for required keys
+                required_keys = ["temperature_average", "volumetric_heat_capacity"]
+                if not all(key in value for key in required_keys):
+                    continue
+
+                temp_avg_data = value.get("temperature_average", {})
+                heat_cap_data = value.get("volumetric_heat_capacity", {})
+
+                if not isinstance(temp_avg_data, dict) or not isinstance(
+                    heat_cap_data, dict
+                ):
+                    continue
+
+                average_temp = temp_avg_data.get("value")
+                average_temp_unit = temp_avg_data.get("unit")
+
+                # Extract heat capacity
+                specific_heat = heat_cap_data.get("value")
+                specific_heat_unit = heat_cap_data.get("unit")
+
+                # Validate values are present and numeric
+                if average_temp is None or specific_heat is None:
+                    continue
+                if not isinstance(average_temp, (int, float)) or not isinstance(
+                    specific_heat, (int, float)
+                ):
+                    continue
+
+                data.append([setpoint, average_temp, specific_heat])
+                units = [average_temp_unit, specific_heat_unit]
 
             # Set column units
             if units:
@@ -345,8 +344,8 @@ class DataExtractor:
             else:
                 pass  # No column metadata to add
 
-            return table
-
         except Exception as e:
             error_msg = f"Failed to create PyArrow table: {e}"
             raise HFMDataExtractionError(error_msg) from e
+        else:
+            return table
