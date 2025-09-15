@@ -6,10 +6,10 @@ from typing import Any
 
 import numpy as np
 import pyarrow as pa
-from labetl.util import set_metadata
 
 from pyhfm.constants import DEFAULT_COLUMN_CONFIG, FileMetadata, HFMType
 from pyhfm.exceptions import HFMDataExtractionError
+from pyhfm.utils import set_metadata
 
 
 class DataExtractor:

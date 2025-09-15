@@ -9,8 +9,6 @@ from datetime import timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from labetl.util import detect_encoding, get_hash, set_metadata
-
 from pyhfm.constants import (
     DEFAULT_PARSING_CONFIG,
     FileMetadata,
@@ -22,6 +20,7 @@ from pyhfm.exceptions import (
     HFMUnsupportedFormatError,
 )
 from pyhfm.extractors.data_extractor import DataExtractor
+from pyhfm.utils import detect_encoding, get_hash, set_metadata
 
 if TYPE_CHECKING:
     import pyarrow as pa
