@@ -193,13 +193,13 @@ def _write_output_file(
         import polars as pl  # noqa: PLC0415
 
         # Convert PyArrow table to Polars DataFrame and write CSV
-        pl_df = pl.from_arrow(table)
+        pl_df = cast("pl.DataFrame", pl.from_arrow(table))
         pl_df.write_csv(output_path)
     elif args.format == "json":
         import polars as pl  # noqa: PLC0415
 
         # Convert PyArrow table to Polars DataFrame and write JSON
-        pl_df = pl.from_arrow(table)
+        pl_df = cast("pl.DataFrame", pl.from_arrow(table))
         pl_df.write_json(output_path)
 
     print(f"Data written to {output_path}")
@@ -218,7 +218,7 @@ def _print_to_stdout(
     import polars as pl  # noqa: PLC0415
 
     # Convert PyArrow table to Polars DataFrame for output
-    pl_df = pl.from_arrow(table)
+    pl_df = cast("pl.DataFrame", pl.from_arrow(table))
 
     if args.format == "csv":
         print(pl_df.write_csv())
