@@ -554,6 +554,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "polars" },
+    { name = "pre-commit" },
     { name = "pyarrow" },
 ]
 
@@ -592,6 +593,7 @@ requires-dist = [
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.5.0" },
     { name = "numpy", specifier = ">=1.20.0" },
     { name = "polars", specifier = ">=0.20.0" },
+    { name = "pre-commit", specifier = ">=4.3.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "pyarrow", specifier = ">=10.0.0" },
     { name = "pyhfm", extras = ["test", "dev"], marker = "extra == 'all'" },
