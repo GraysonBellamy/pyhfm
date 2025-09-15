@@ -1,0 +1,90 @@
+# Pre-commit hooks for pyhfm
+# See https://pre-commit.com for more information
+
+repos:
+  # Linting and code quality
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.0
+    hooks:
+      - id: ruff
+        name: "Lint Python code with Ruff"
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+        name: "Format Python code with Ruff"
+
+  # Type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.1
+    hooks:
+      - id: mypy
+        name: "Type check with mypy"
+        additional_dependencies:
+          - types-setuptools
+        args: [--ignore-missing-imports]
+        files: ^src/pyhfm/.*\.py$
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: "Remove trailing whitespace"
+      - id: end-of-file-fixer
+        name: "Ensure files end with newline"
+      - id: check-yaml
+        name: "Check YAML syntax"
+      - id: check-toml
+        name: "Check TOML syntax"
+      - id: check-json
+        name: "Check JSON syntax"
+      - id: check-merge-conflict
+        name: "Check for merge conflict markers"
+      - id: check-added-large-files
+        name: "Check for large files"
+        args: [--maxkb=1000]
+      - id: check-case-conflict
+        name: "Check for case conflicts"
+      - id: mixed-line-ending
+        name: "Check line endings"
+        args: [--fix=lf]
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        name: "Security check with Bandit"
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+        exclude: tests/
+
+  # Docstring checks (temporarily disabled while focusing on core functionality)
+  # - repo: https://github.com/pycqa/pydocstyle
+  #   rev: 6.3.0
+  #   hooks:
+  #     - id: pydocstyle
+  #       name: "Check docstrings with pydocstyle"
+  #       additional_dependencies: [toml]
+  #       files: ^src/pyhfm/.*\.py$
+  #       args: [--convention=numpy]
+
+  # Spell checking
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        name: "Check spelling"
+        args: [--write-changes]
+        exclude: |
+          (?x)^(
+            .*\.lock|
+            .*\.ngb-ss3|
+            tests/test_files/.*
+          )$
+
+# Configuration for specific hooks
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit]
+
+# Minimum pre-commit version
+minimum_pre_commit_version: '3.0.0'
