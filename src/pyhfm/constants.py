@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import re
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import TypedDict
 
@@ -85,6 +86,26 @@ class SetpointData(TypedDict, total=False):
 
 
 @dataclass(frozen=True)
+class CompiledPatterns:
+    """Pre-compiled regex patterns for maximum efficiency."""
+
+    value_pattern: re.Pattern = field(default_factory=lambda: re.compile(r"\d+\.\d+"))
+    unit_pattern: re.Pattern = field(default_factory=lambda: re.compile(r"[a-zA-Z]+"))
+    unicode_unit_pattern: re.Pattern = field(
+        default_factory=lambda: re.compile(r"[^\x00-\x7f]+[a-zA-Z]+")
+    )
+    unit_ratio_pattern: re.Pattern = field(
+        default_factory=lambda: re.compile(r"[a-zA-Z]/[a-zA-Z]+")
+    )
+    setpoint_pattern: re.Pattern = field(
+        default_factory=lambda: re.compile(r"setpoint\s+(\d+)")
+    )
+    date_pattern: re.Pattern = field(
+        default_factory=lambda: re.compile(r"^\w+, \w+ \d+, \d+, Time \d+:\d+$")
+    )
+
+
+@dataclass(frozen=True)
 class HFMParsingConfig:
     """Configuration for HFM file parsing."""
 
@@ -97,11 +118,8 @@ class HFMParsingConfig:
     # Date format patterns
     date_format: str = "%A, %B %d, %Y, Time %H:%M"
 
-    # Regex patterns for value extraction
-    value_pattern: str = r"\d+\.\d+"
-    unit_pattern: str = r"[a-zA-Z]+"
-    unicode_unit_pattern: str = r"[^\x00-\x7f]+[a-zA-Z]+"
-    unit_ratio_pattern: str = r"[a-zA-Z]/[a-zA-Z]+"
+    # Pre-compiled regex patterns
+    patterns: CompiledPatterns = field(default_factory=CompiledPatterns)
 
     # Default units for specific measurements
     default_calibration_unit: str = "µV/W"

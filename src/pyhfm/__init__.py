@@ -11,8 +11,9 @@ Main functionality:
 
 Example:
     >>> import pyhfm
+    >>> import polars as pl
     >>> table = pyhfm.read_hfm("sample.tst")
-    >>> print(table.to_polars())
+    >>> print(pl.from_arrow(table))
 
     >>> # Access metadata
     >>> metadata, table = pyhfm.read_hfm("sample.tst", return_metadata=True)
@@ -30,7 +31,7 @@ from .constants import (
     FileMetadata,
     HFMType,
 )
-from .core.parser import HFMParser
+from .core.file_parser import FileParser as HFMParser
 from .exceptions import (
     HFMDataExtractionError,
     HFMError,

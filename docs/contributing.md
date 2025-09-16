@@ -172,8 +172,9 @@ def read_hfm(filename: str, return_metadata: bool = False) -> pa.Table:
         HFMParsingError: If the file format is invalid.
 
     Example:
+        >>> import polars as pl
         >>> table = read_hfm("sample.tst")
-        >>> df = table.to_polars()
+        >>> df = pl.from_arrow(table)
     """
 ```
 

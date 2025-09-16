@@ -43,7 +43,8 @@ import polars as pl
 table = pyhfm.read_hfm("your_file.tst")
 
 # Convert to DataFrame for analysis
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 
 print(f"Loaded {df.height} measurements with {df.width} columns")
 print(f"Available columns: {df.columns}")
@@ -166,7 +167,8 @@ loaded_table = pq.read_table("output.parquet")
 
 ```python
 # Convert to CSV (loses metadata)
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 df.write_csv("output.csv")
 ```
 

@@ -14,7 +14,8 @@ import polars as pl
 
 # Basic loading
 table = pyhfm.read_hfm("sample.tst")
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 
 # Load with metadata separated
 metadata, table = pyhfm.read_hfm("sample.tst", return_metadata=True)
@@ -44,7 +45,8 @@ elif measurement_type == 'volumetric_heat_capacity':
 
 ```python
 # Load thermal conductivity data
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 
 if "upper_thermal_conductivity" in df.columns:
     # Calculate statistics
@@ -114,7 +116,8 @@ import json
 pq.write_table(table, "output.parquet")
 
 # CSV (data only)
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 df.write_csv("output.csv")
 
 # JSON with metadata
@@ -341,7 +344,8 @@ tc_array = tc_col.to_numpy()
 ```python
 def validate_hfm_data(table, metadata):
     """Validate HFM data for common issues."""
-    df = table.to_polars()
+    import polars as pl
+df = pl.from_arrow(table)
 
     issues = []
 

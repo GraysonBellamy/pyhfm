@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
     from pyhfm.constants import FileMetadata
 
-from pyhfm.core.parser import HFMParser
+from pyhfm.core.file_parser import FileParser as HFMParser
 from pyhfm.exceptions import HFMError
 
 
@@ -64,9 +64,10 @@ def read_hfm(
 
     Examples:
         Basic usage:
+        >>> import polars as pl
         >>> table = read_hfm("sample.tst")
         >>> print(table.schema)
-        >>> print(table.to_polars()())
+        >>> print(pl.from_arrow(table))
 
         Access metadata separately:
         >>> metadata, table = read_hfm("sample.tst", return_metadata=True)

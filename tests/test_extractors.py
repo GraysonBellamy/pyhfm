@@ -102,3 +102,41 @@ class TestDataExtractor:
 
         with pytest.raises(HFMDataExtractionError, match="No data to create table"):
             extractor._create_table([], schema, {})
+
+    def test_extractor_initialization_with_config(self) -> None:
+        """Test DataExtractor initialization with custom config."""
+        custom_config = {"temperature_units": "celsius"}
+        extractor = DataExtractor(config=custom_config)
+        assert extractor.config is not None
+
+    def test_helper_methods_with_mock_data(self) -> None:
+        """Test the helper methods with mock setpoint data."""
+        extractor = DataExtractor()
+
+        # Test _extract_temperature_data_safely with dict data
+        setpoint_value = {
+            "temperature": {"upper": {"value": 25.0}, "lower": {"value": 15.0}}
+        }
+        upper, lower = extractor._extract_temperature_data_safely(setpoint_value)
+        assert upper == {"value": 25.0}
+        assert lower == {"value": 15.0}
+
+        # Test _extract_results_data_safely with dict data
+        setpoint_value_with_results = {
+            "results": {"upper": {"value": 1.5}, "lower": {"value": 1.2}}
+        }
+        upper, lower = extractor._extract_results_data_safely(
+            setpoint_value_with_results
+        )
+        assert upper == {"value": 1.5}
+        assert lower == {"value": 1.2}
+
+        # Test _extract_conductivity_units
+        temp_upper = {"unit": "°C"}
+        temp_lower = {"unit": "°C"}
+        results_upper = {"unit": "W/m·K"}
+        results_lower = {"unit": "W/m·K"}
+        units = extractor._extract_conductivity_units(
+            temp_upper, temp_lower, results_upper, results_lower
+        )
+        assert len(units) == 4  # Returns temperature units + results units

@@ -145,13 +145,15 @@ measurement_type = metadata.get('type', 'unknown')
 print(f"Measurement type: {measurement_type}")
 
 # Check available columns
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 print(f"Available columns: {df.columns}")
 ```
 
 2. **Handle different measurement types**:
 ```python
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 
 if "upper_thermal_conductivity" in df.columns:
     # Thermal conductivity data
@@ -171,7 +173,8 @@ else:
 
 1. **Check data dimensions**:
 ```python
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 print(f"Data shape: {df.shape}")
 print(f"Data types: {df.dtypes}")
 ```
@@ -335,7 +338,8 @@ print(f"Polars version: {pl.__version__}")
 2. **Convert explicitly**:
 ```python
 # Ensure proper conversion
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 print(f"DataFrame type: {type(df)}")
 ```
 

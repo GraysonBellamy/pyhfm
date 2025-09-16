@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import chardet
 import pyarrow as pa
@@ -103,14 +103,18 @@ def set_metadata(
             field_name = field.name
             if field_name in col_meta:
                 # Convert column metadata to JSON bytes
-                col_metadata = {
-                    k: json.dumps(v).encode() for k, v in col_meta[field_name].items()
+                col_metadata: dict[str | bytes, str | bytes] = {
+                    str(k): json.dumps(v).encode()
+                    for k, v in col_meta[field_name].items()
                 }
                 new_field = field.with_metadata(col_metadata)
             else:
                 new_field = field
             fields.append(new_field)
-        new_schema = pa.schema(fields, metadata=new_schema.metadata)
+        new_schema = pa.schema(
+            fields,
+            metadata=cast("dict[bytes | str, bytes | str] | None", new_schema.metadata),
+        )
 
     # Return new table with updated schema
     return table.cast(new_schema)

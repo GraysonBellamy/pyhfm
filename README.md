@@ -40,7 +40,8 @@ import pyhfm
 table = pyhfm.read_hfm("sample.tst")
 
 # Convert to polars DataFrame for analysis
-df = table.to_polars()
+import polars as pl
+df = pl.from_arrow(table)
 print(df.head())
 ```
 
