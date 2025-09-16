@@ -1,0 +1,37 @@
+/* Custom CSS for pyhfm documentation */
+
+/* Enhanced code blocks */
+.highlight {
+    border-radius: 0.3rem;
+}
+
+/* Custom admonition styles */
+.md-typeset .admonition.note {
+    border-color: #448aff;
+}
+
+.md-typeset .admonition.tip {
+    border-color: #00c853;
+}
+
+.md-typeset .admonition.warning {
+    border-color: #ff9100;
+}
+
+/* Table styling */
+.md-typeset table:not([class]) {
+    font-size: 0.8rem;
+}
+
+/* API documentation improvements */
+.doc-heading {
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Code annotation styling */
+.md-typeset .md-annotation__index {
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+}

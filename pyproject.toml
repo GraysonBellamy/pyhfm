@@ -44,7 +44,12 @@ dev = [
     "pre-commit>=3.0.0",
     "bandit>=1.7.0",
 ]
-all = ["pyhfm[test,dev]"]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.20.0",
+]
+all = ["pyhfm[test,dev,docs]"]
 
 [project.scripts]
 pyhfm = "pyhfm.api.loaders:main"

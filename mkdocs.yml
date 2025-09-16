@@ -1,0 +1,126 @@
+site_name: pyhfm - Heat Flow Meter Data Parser
+site_description: Python package for reading and analyzing Heat Flow Meter (HFM) data files
+site_author: Grayson Bellamy
+site_url: https://graysonbellamy.github.io/pyhfm/
+
+repo_name: GraysonBellamy/pyhfm
+repo_url: https://github.com/GraysonBellamy/pyhfm
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.progress
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+    - toc.follow
+    - toc.integrate
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+  logo: https://img.icons8.com/color/48/000000/heat.png
+  favicon: https://img.icons8.com/color/32/000000/heat.png
+
+plugins:
+  - search:
+      lang: en
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_root_toc_entry: false
+            heading_level: 2
+            members_order: source
+            group_by_category: true
+            show_category_heading: true
+            show_if_no_docstring: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          # Use string reference for format to satisfy YAML linter
+          format: "pymdownx.superfences.fence_code_format"
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+nav:
+  - Getting Started: getting-started.md
+  - User Guide: user-guide.md
+  - API Reference: api-reference.md
+  - Troubleshooting: troubleshooting.md
+  - Contributing: contributing.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/GraysonBellamy/pyhfm
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/pyhfm/
+  version:
+    provider: mike
+  analytics:
+    provider: google
+    property: ${GOOGLE_ANALYTICS_KEY}
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+copyright: |
+  Copyright &copy; 2024-2025 Grayson Bellamy -
+  <a href="https://github.com/GraysonBellamy/pyhfm/blob/main/LICENSE.txt">MIT License</a>
