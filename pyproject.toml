@@ -49,7 +49,14 @@ docs = [
     "mkdocs-material>=9.0.0",
     "mkdocstrings[python]>=0.20.0",
 ]
-all = ["pyhfm[test,dev,docs]"]
+build = [
+    "build>=1.0.0",
+    "twine>=4.0.0",
+]
+performance = [
+    "pytest-benchmark>=4.0.0",
+]
+all = ["pyhfm[test,dev,docs,build,performance]"]
 
 [project.scripts]
 pyhfm = "pyhfm.api.loaders:main"
