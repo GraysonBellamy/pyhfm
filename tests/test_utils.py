@@ -23,7 +23,11 @@ class TestDetectEncoding:
 
         try:
             encoding = detect_encoding(temp_path)
-            assert encoding in ("utf-8", "ascii")  # ASCII is a subset of UTF-8
+            assert encoding in (
+                "utf-8",
+                "ascii",
+                "windows-1252",
+            )  # chardet may report any of these for ASCII-range text
         finally:
             Path(temp_path).unlink()
 
@@ -35,7 +39,11 @@ class TestDetectEncoding:
 
         try:
             encoding = detect_encoding(temp_path)
-            assert encoding in ("utf-8", "ascii")
+            assert encoding in (
+                "utf-8",
+                "ascii",
+                "windows-1252",
+            )  # chardet may report any of these for ASCII-range text
         finally:
             Path(temp_path).unlink()
 
