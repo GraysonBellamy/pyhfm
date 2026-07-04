@@ -219,6 +219,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions, please:
 
-1. Check the [documentation](https://pyhfm.readthedocs.io/)
+1. Check the [documentation](https://pyhfm.graysonbellamy.dev/)
 2. Search [existing issues](https://github.com/GraysonBellamy/pyhfm/issues)
 3. Create a [new issue](https://github.com/GraysonBellamy/pyhfm/issues/new) if needed
