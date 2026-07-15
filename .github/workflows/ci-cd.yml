@@ -220,6 +220,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      # Required for PyPI trusted publishing (OIDC token exchange)
+      id-token: write
     needs: [test, build]
     if: github.event_name == 'release' && github.event.action == 'published'
 
@@ -234,5 +236,3 @@ jobs:
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@v1.13.0
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
