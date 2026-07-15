@@ -75,6 +75,7 @@ class ThermalEquilibriumData(TypedDict, total=False):
 class SetpointData(TypedDict, total=False):
     """Complete setpoint data structure."""
 
+    instrument_setpoint_number: int
     date_performed: str
     setpoint_temperature: dict[str, TemperatureData]
     temperature: dict[str, TemperatureData]
@@ -89,7 +90,7 @@ class SetpointData(TypedDict, total=False):
 class CompiledPatterns:
     """Pre-compiled regex patterns for maximum efficiency."""
 
-    value_pattern: re.Pattern = field(default_factory=lambda: re.compile(r"\d+\.\d+"))
+    value_pattern: re.Pattern = field(default_factory=lambda: re.compile(r"-?\d+\.\d+"))
     unit_pattern: re.Pattern = field(default_factory=lambda: re.compile(r"[a-zA-Z]+"))
     unicode_unit_pattern: re.Pattern = field(
         default_factory=lambda: re.compile(r"[^\x00-\x7f]+[a-zA-Z]+")

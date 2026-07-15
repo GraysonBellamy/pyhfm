@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import re
+import warnings
 from datetime import datetime as dt
 from datetime import timezone
 from typing import TYPE_CHECKING, Any
+
+from pyhfm.exceptions import HFMValidationWarning
 
 if TYPE_CHECKING:
     from pyhfm.constants import HFMParsingConfig
@@ -40,12 +43,8 @@ class SetpointParser:
         self, line: str, lines: list[str], i: int, metadata: dict[str, Any]
     ) -> None:
         """Parse detailed setpoint data."""
-        setpoint = int(line.split(".")[1].strip())
-        setpoint_key = f"setpoint_{setpoint}"
-
-        # Ensure setpoint structure exists
-        if setpoint_key not in metadata["setpoints"]:
-            metadata["setpoints"][setpoint_key] = {}
+        instrument_number = int(line.split(".")[1].strip())
+        setpoint_key = self._assign_setpoint_key(instrument_number, metadata)
 
         # Parse date for this setpoint
         if i >= 2:
@@ -59,7 +58,47 @@ class SetpointParser:
                 break
 
             sub_line = lines[i + j].strip()
+
+            # Stop at the next setpoint section so closely spaced blocks
+            # don't overwrite this setpoint's values
+            if (
+                sub_line.startswith("Setpoint No.")
+                or "Block Averages for setpoint" in sub_line
+            ):
+                break
+
             self._parse_setpoint_detail(sub_line, lines, i + j, setpoint_key, metadata)
+
+    def _assign_setpoint_key(
+        self, instrument_number: int, metadata: dict[str, Any]
+    ) -> str:
+        """Assign a metadata key for a setpoint summary block.
+
+        Summary blocks are keyed by order of appearance rather than by the
+        number the instrument reports: WinTherm restarts numbering at 1 when
+        an interrupted test is resumed, so raw numbers can repeat within a
+        file and same-numbered blocks must not overwrite each other. The
+        instrument's own number is preserved as ``instrument_setpoint_number``.
+        """
+        setpoints = metadata.setdefault("setpoints", {})
+        parsed_numbers = [
+            value["instrument_setpoint_number"]
+            for value in setpoints.values()
+            if isinstance(value, dict) and "instrument_setpoint_number" in value
+        ]
+
+        if parsed_numbers and instrument_number <= parsed_numbers[-1]:
+            msg = (
+                f"Setpoint numbering restarted at {instrument_number} after "
+                f"setpoint {parsed_numbers[-1]}; treating file as a resumed "
+                "run and keeping setpoints from all passes."
+            )
+            warnings.warn(msg, HFMValidationWarning, stacklevel=2)
+
+        setpoint_key = f"setpoint_{len(parsed_numbers) + 1}"
+        setpoint_entry = setpoints.setdefault(setpoint_key, {})
+        setpoint_entry["instrument_setpoint_number"] = instrument_number
+        return setpoint_key
 
     def parse_block_averages_setpoint(
         self, line: str, lines: list[str], i: int, metadata: dict[str, Any]
@@ -337,12 +376,12 @@ class SetpointParser:
     ) -> None:
         """Parse specific heat (volumetric heat capacity) data."""
         sub_line_data = sub_line.split(":", 1)[1].strip()
-        value_match = re.findall(r"\d+", sub_line_data)
+        value_match = re.search(r"-?\d+(?:\.\d+)?", sub_line_data)
 
         if not value_match:
             return
 
-        value = value_match[0]
+        value = value_match.group()
         unit = sub_line_data.replace(value, "").strip()
 
         metadata["setpoints"][setpoint_key]["volumetric_heat_capacity"] = {

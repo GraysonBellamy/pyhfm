@@ -213,11 +213,10 @@ Some content with  extra  spaces
         assert result["value"] == 3.14159
         assert result["unit"] == "rad"
 
-        # Test with negative numbers - current regex doesn't support negative
-        # The parser will extract 273.15 from "-273.15 °C" (positive part only)
+        # Test with negative numbers - sign must be preserved
         # Unit pattern only matches letters, so "°C" becomes "C"
         result = parser._extract_value_and_unit("-273.15 °C")
-        assert result["value"] == 273.15  # Parser only captures positive decimal part
+        assert result["value"] == -273.15
         assert result["unit"] == "C"  # Unit pattern only captures letters
 
         # Test with scientific notation - regex extracts first decimal part

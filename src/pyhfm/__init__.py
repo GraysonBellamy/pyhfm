@@ -40,11 +40,12 @@ from .exceptions import (
     HFMParsingError,
     HFMUnsupportedFormatError,
     HFMValidationError,
+    HFMValidationWarning,
 )
 from .extractors.data_extractor import DataExtractor
 
 # Version information
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Grayson Bellamy"
 __email__ = "gbellamy@umd.edu"
 
@@ -64,6 +65,7 @@ __all__ = [
     "HFMType",
     "HFMUnsupportedFormatError",
     "HFMValidationError",
+    "HFMValidationWarning",
     "__author__",
     "__email__",
     "__version__",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -13,6 +14,7 @@ from pyhfm.exceptions import (
     HFMFileError,
     HFMParsingError,
     HFMUnsupportedFormatError,
+    HFMValidationWarning,
 )
 from pyhfm.extractors.data_extractor import DataExtractor
 from pyhfm.utils import detect_encoding, get_hash, set_metadata
@@ -153,6 +155,10 @@ class FileParser:
             # Parse setpoint-specific data
             self._parse_setpoint_lines(lines, metadata)
 
+            # Warn if the file's declared setpoint count doesn't match what
+            # was actually parsed (truncated or interrupted run)
+            self._validate_setpoint_count(metadata, path)
+
         except Exception as e:
             if isinstance(e, HFMParsingError):
                 raise
@@ -172,6 +178,21 @@ class FileParser:
         }
 
         return metadata  # type: ignore[return-value]
+
+    def _validate_setpoint_count(self, metadata: dict[str, Any], path: Path) -> None:
+        """Warn when parsed setpoints differ from the declared header count."""
+        declared = metadata.get("number_of_setpoints")
+        if declared is None:
+            return
+
+        parsed = len(metadata.get("setpoints", {}))
+        if parsed != declared:
+            msg = (
+                f"File declares {declared} setpoints but {parsed} were parsed "
+                f"({path.name}); the file may be truncated or from an "
+                "interrupted run."
+            )
+            warnings.warn(msg, HFMValidationWarning, stacklevel=2)
 
     def _parse_setpoint_lines(self, lines: list[str], metadata: dict[str, Any]) -> None:
         """Parse lines for setpoint-specific data."""

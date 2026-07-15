@@ -24,6 +24,16 @@ class HFMError(Exception):
         return self.message
 
 
+class HFMValidationWarning(UserWarning):
+    """Warning for recoverable inconsistencies found while parsing HFM files.
+
+    Emitted (via ``warnings.warn``) when a file can still be parsed but its
+    contents look suspicious — e.g. the number of parsed setpoints does not
+    match the declared ``Number of Setpoints:`` header, or setpoint numbering
+    restarts mid-file because an interrupted test was resumed.
+    """
+
+
 class HFMParsingError(HFMError):
     """Raised when HFM file parsing fails."""
 
