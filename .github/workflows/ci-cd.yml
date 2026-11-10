@@ -16,9 +16,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
         os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
+    env:
+      # Make uv use the matrix interpreter. Without this, `uv sync` and
+      # `uv run` follow .python-version (3.13) and ignore setup-python.
+      UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
     - uses: actions/checkout@v4
